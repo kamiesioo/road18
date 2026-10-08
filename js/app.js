@@ -1,34 +1,15 @@
 (() => {
   "use strict";
 
-  /* ---------- Datos (stock y descripciones de ejemplo para la maqueta) ---------- */
-  const PRODUCTS = [
-    { id: "camp-woodland", name: "Campera Camo Woodland", cat: "Camperas", price: 25000,
-      img: "assets/img/campera-woodland.jpg", desc: "Capucha con forro de corderito y logo bordado.",
-      sizes: { S: 2, M: 4, L: 3, XL: 0 } },
-    { id: "camp-digital", name: "Campera Camo Digital", cat: "Camperas", price: 25000,
-      img: "assets/img/campera-digital.jpg", desc: "Camuflaje digital verde con forro acolchado.",
-      sizes: { S: 0, M: 3, L: 5, XL: 2 } },
-    { id: "camp-urbana", name: "Campera Camo Gris Urbano", cat: "Camperas", price: 25000,
-      img: "assets/img/campera-urbana.jpg", desc: "Camuflaje gris y azul, puños elásticos.",
-      sizes: { S: 1, M: 2, L: 0, XL: 0 } },
-    { id: "baggy", name: "Baggy Regulable", cat: "Pantalones", price: 20000,
-      img: "assets/img/baggy.jpg", desc: "Cintura elástica y cordón regulable en el ruedo. Franjas blancas.",
-      sizes: { "Único": 7 } },
-    { id: "camisa-camo", name: "Camisa Camo Digital", cat: "Camisas", price: 15000,
-      img: "assets/img/camisa.jpg", desc: "Manga corta, bolsillos y bordado al frente.",
-      sizes: { M: 2, L: 3, XL: 0 } },
-  ];
-
+  const store = window.R18Store;
+  const { esc, money } = store;
   const LS_KEY = "road18-cart-v1";
-  const LOW_STOCK = 4;
+  const LOW_STOCK = store.LOW_STOCK;
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-  const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
-  const money = n => "$" + n.toLocaleString("es-AR");
-  const totalStock = p => Object.values(p.sizes).reduce((a, b) => a + b, 0);
-  const maxStock = Math.max(...PRODUCTS.map(totalStock));
+  const totalStock = store.totalStock;
 
+  let PRODUCTS = [], byId = {}, maxStock = 1;
   const state = {
     cat: "Todo",
     sort: "feat",
@@ -37,13 +18,30 @@
     cart: [],        // [{ id, size, qty }]
   };
 
+  /** Lee el catálogo vigente (solo productos visibles) y deja consistente lo elegido en pantalla. */
+  function loadProducts() {
+    PRODUCTS = store.getProducts().filter(p => p.active !== false);
+    byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+    maxStock = Math.max(1, ...PRODUCTS.map(totalStock));
+    PRODUCTS.forEach(p => {
+      const keys = Object.keys(p.sizes);
+      if (!(state.picked[p.id] in p.sizes)) delete state.picked[p.id];
+      if (keys.length === 1 && p.sizes[keys[0]] > 0) state.picked[p.id] = keys[0];
+    });
+    if (state.cat !== "Todo" && !PRODUCTS.some(p => p.cat === state.cat)) state.cat = "Todo";
+  }
+
   /* ---------- Persistencia ---------- */
   function loadCart() {
     try {
-      const raw = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
-      state.cart = raw.filter(l => byId[l.id] && byId[l.id].sizes[l.size] > 0)
-        .map(l => ({ id: l.id, size: l.size, qty: Math.min(l.qty, byId[l.id].sizes[l.size]) }));
+      state.cart = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
     } catch { state.cart = []; }
+    sanitizeCart();
+  }
+  /** Quita del carrito lo que ya no existe o no tiene stock, y ajusta cantidades. */
+  function sanitizeCart() {
+    state.cart = state.cart.filter(l => byId[l.id] && byId[l.id].sizes[l.size] > 0)
+      .map(l => ({ id: l.id, size: l.size, qty: Math.min(l.qty, byId[l.id].sizes[l.size]) }));
   }
   function saveCart() {
     try { localStorage.setItem(LS_KEY, JSON.stringify(state.cart)); } catch { /* sin storage */ }
@@ -53,7 +51,7 @@
   function renderChips() {
     const cats = ["Todo", ...new Set(PRODUCTS.map(p => p.cat))];
     $("#chips").innerHTML = cats.map(c =>
-      `<button class="chip" type="button" data-cat="${c}" aria-pressed="${c === state.cat}">${c}</button>`).join("");
+      `<button class="chip" type="button" data-cat="${esc(c)}" aria-pressed="${c === state.cat}">${esc(c)}</button>`).join("");
   }
 
   function cardHTML(p) {
@@ -62,26 +60,26 @@
     const low = !sold && total <= LOW_STOCK;
     const picked = state.picked[p.id];
     const sizes = Object.entries(p.sizes).map(([s, n]) =>
-      `<button class="size" type="button" data-size="${s}" aria-pressed="${picked === s}" ${n === 0 ? "disabled" : ""}
-        aria-label="Talle ${s}${n === 0 ? ", sin stock" : ""}">${s}</button>`).join("");
-    const hint = picked ? `Talle ${picked}: quedan ${p.sizes[picked]}` : "Elegí un talle";
+      `<button class="size" type="button" data-size="${esc(s)}" aria-pressed="${picked === s}" ${n === 0 ? "disabled" : ""}
+        aria-label="Talle ${esc(s)}${n === 0 ? ", sin stock" : ""}">${esc(s)}</button>`).join("");
+    const hint = picked ? `Talle ${esc(picked)}: quedan ${p.sizes[picked]}` : "Elegí un talle";
     return `
-      <li class="item" data-id="${p.id}">
+      <li class="item" data-id="${esc(p.id)}">
         <article class="card ${sold ? "soldout" : ""}">
           <div class="shot">
-            <img src="${p.img}" alt="${p.name}" loading="lazy">
+            <img src="${esc(store.imgSrc(p.img))}" alt="${esc(p.name)}" loading="lazy">
             ${sold ? `<span class="stamp big">Agotado</span>` : low ? `<span class="stamp">¡Últimas!</span>` : ""}
             <span class="price">${money(p.price)}</span>
           </div>
           <div class="info">
-            <span class="cat">${p.cat}</span>
-            <h3 class="name">${p.name}</h3>
-            <p class="desc">${p.desc}</p>
+            <span class="cat">${esc(p.cat)}</span>
+            <h3 class="name">${esc(p.name)}</h3>
+            <p class="desc">${esc(p.desc)}</p>
             <div class="stock ${low ? "low" : ""}">
               <span>${sold ? "Sin stock" : `Stock: ${total} u.`}</span>
               <span class="bar" aria-hidden="true"><i style="width:${Math.round(total / maxStock * 100)}%"></i></span>
             </div>
-            ${sold ? "" : `<div class="sizes" role="group" aria-label="Talles de ${p.name}">${sizes}</div>
+            ${sold ? "" : `<div class="sizes" role="group" aria-label="Talles de ${esc(p.name)}">${sizes}</div>
             <p class="size-hint">${hint}</p>`}
             <button class="add" type="button" ${sold ? "disabled" : ""}>${sold ? "Agotado" : "Agregar al carrito"}</button>
           </div>
@@ -97,8 +95,6 @@
     $("#gridEmpty").hidden = list.length > 0;
   }
 
-  // Si una prenda tiene un solo talle, queda elegido de entrada.
-  PRODUCTS.forEach(p => { const k = Object.keys(p.sizes); if (k.length === 1) state.picked[p.id] = k[0]; });
 
   /* ---------- Carrito ---------- */
   const inCart = (id, size) => state.cart.find(l => l.id === id && l.size === size);
@@ -143,11 +139,11 @@
     $("#cartList").innerHTML = state.cart.map(l => {
       const p = byId[l.id];
       return `
-        <li class="line" data-id="${l.id}" data-size="${l.size}">
-          <img src="${p.img}" alt="">
+        <li class="line" data-id="${esc(l.id)}" data-size="${esc(l.size)}">
+          <img src="${esc(store.imgSrc(p.img))}" alt="">
           <div>
-            <h3>${p.name}</h3>
-            <p class="meta">Talle ${l.size} · ${money(p.price)} c/u</p>
+            <h3>${esc(p.name)}</h3>
+            <p class="meta">Talle ${esc(l.size)} · ${money(p.price)} c/u</p>
             <div class="qty">
               <button type="button" data-d="-1" aria-label="Quitar una unidad">−</button>
               <output aria-live="polite">${l.qty}</output>
@@ -208,17 +204,27 @@
   function confirmOrder(e) {
     e.preventDefault();
     if (!state.cart.length || !validate()) return;
-    const id = "R18-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-    const total = cartTotal();
     const pago = radio("pago"), envio = radio("entrega") === "envio";
+    sanitizeCart();
+    if (!state.cart.length) { renderCart(); renderGrid(); toast("Tu carrito cambió: ya no hay stock de lo que elegiste"); return; }
 
-    $("#orderId").textContent = id;
-    $("#orderTotal").textContent = money(total);
-    $("#orderList").replaceChildren(...state.cart.map(l => {
+    const res = store.placeOrder({
+      customer: { nombre: val("nombre"), tel: val("tel") },
+      entrega: envio ? "envio" : "retiro",
+      address: envio ? { dir: val("dir"), loc: val("loc"), cp: val("cp"), prov: val("prov") } : null,
+      pago,
+      items: state.cart.map(l => ({ id: l.id, size: l.size, qty: l.qty })),
+    });
+    if (!res.ok) { loadProducts(); sanitizeCart(); renderChips(); renderGrid(); renderCart(); toast(res.error); return; }
+    const order = res.order;
+
+    $("#orderId").textContent = order.id;
+    $("#orderTotal").textContent = money(order.total);
+    $("#orderList").replaceChildren(...order.items.map(l => {
       const li = document.createElement("li");
       const a = document.createElement("span"), b = document.createElement("b");
-      a.textContent = `${l.qty}× ${byId[l.id].name} (${l.size})`;
-      b.textContent = money(l.qty * byId[l.id].price);
+      a.textContent = `${l.qty}× ${l.name} (${l.size})`;
+      b.textContent = money(l.qty * l.price);
       li.append(a, b);
       return li;
     }));
@@ -240,11 +246,11 @@
       next.append(p3);
     }
 
-    // La maqueta descuenta el stock en pantalla para mostrar cómo reacciona el catálogo.
-    state.cart.forEach(l => { byId[l.id].sizes[l.size] -= l.qty; });
+    // El stock ya se descontó en el store: recargamos para reflejarlo.
     state.cart = []; saveCart();
+    loadProducts();
     form.reset(); syncCheckout();
-    renderCart(); renderGrid();
+    renderChips(); renderGrid(); renderCart();
     closeCart();
     $("#orderModal").showModal();
   }
@@ -321,8 +327,15 @@
   $("#closeOrder").addEventListener("click", () => $("#orderModal").close());
 
   /* ---------- Init ---------- */
+  loadProducts();
   loadCart();
   renderChips();
   renderGrid();
   renderCart();
+
+  // Si el panel cambia precios o stock desde otra pestaña, la tienda se actualiza sola.
+  store.subscribe(() => {
+    loadProducts(); sanitizeCart(); saveCart();
+    renderChips(); renderGrid(); renderCart();
+  });
 })();

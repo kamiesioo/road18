@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROAD 18 · Administración</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="side" id="side" aria-label="Navegación principal">
+      <div class="side-brand">
+        <img src="../assets/img/logo.png" alt="" width="40" height="40">
+        <div><strong>ROAD 18</strong><span>Administración</span></div>
+      </div>
+      <nav class="side-nav">
+        <a href="#/resumen" data-route="resumen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm8 0h8v-9h-8v9Zm0-16v5h8V4h-8Z"/></svg>Resumen</a>
+        <a href="#/productos" data-route="productos">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7 12 3 4 7v10l8 4 8-4V7Zm-8-2.8L17.7 7 12 9.8 6.3 7 12 4.2ZM6 8.6l5 2.5v7.7l-5-2.5V8.6Zm7 10.2v-7.7l5-2.5v7.7l-5 2.5Z"/></svg>Productos</a>
+        <a href="#/pedidos" data-route="pedidos">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10l3 4v12H4V8l3-4Zm.8 2L6 8h12l-1.8-2H7.800ZM6 10v8h12v-8h-3v1a3 3 0 0 1-6 0v-1H6Z"/></svg>Pedidos
+          <span class="nav-badge" id="navBadge" hidden>0</span></a>
+        <a href="#/ajustes" data-route="ajustes">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.600 7.600 0 0 0 0-2l2-1.600-2-3.400-2.400 1a7.500 7.500 0 0 0-1.700-1L15 3h-4l-.4 3a7.500 7.500 0 0 0-1.700 1l-2.400-1-2 3.400L6.600 11a7.600 7.600 0 0 0 0 2l-2 1.600 2 3.400 2.400-1a7.500 7.500 0 0 0 1.700 1l.4 3h4l.4-3a7.500 7.500 0 0 0 1.700-1l2.400 1 2-3.400-2.200-1.600ZM13 15.500a3.500 3.500 0 1 1 0-7 3.500 3.500 0 0 1 0 7Z" transform="translate(-1 0)"/></svg>Ajustes</a>
+      </nav>
+      <a class="side-store" href="../index.html" target="_blank" rel="noopener">Ver tienda <span aria-hidden="true">↗</span></a>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="main">
+      <header class="top">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-controls="side" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3V6Zm0 5h18v2H3v-2Zm0 5h18v2H3v-2Z"/></svg>
+        </button>
+        <h1 id="pageTitle">Resumen</h1>
+        <div class="top-actions" id="topActions"></div>
+      </header>
+      <main id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <!-- Detalle de pedido -->
+  <div class="scrim scrim-order" id="orderScrim" hidden></div>
+  <aside class="panel" id="orderPanel" role="dialog" aria-modal="true" aria-labelledby="orderPanelTitle" aria-hidden="true"></aside>
+
+  <!-- Producto -->
+  <dialog class="dlg" id="prodDialog" aria-labelledby="prodTitle">
+    <form id="prodForm" novalidate>
+      <header class="dlg-head">
+        <h2 id="prodTitle">Nuevo producto</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Cerrar">✕</button>
+      </header>
+      <div class="dlg-body">
+        <div class="prod-grid">
+          <div class="photo-col">
+            <span class="label">Foto</span>
+            <div class="photo" id="photoBox">
+              <img id="photoImg" alt="Vista previa de la foto" hidden>
+              <span class="photo-empty" id="photoEmpty">Sin foto</span>
+            </div>
+            <div class="photo-actions">
+              <label class="btn btn-sm">Subir foto<input type="file" id="photoInput" accept="image/*" hidden></label>
+              <button class="btn btn-sm btn-quiet" type="button" id="photoClear" hidden>Quitar</button>
+            </div>
+            <p class="hint">Se achica automáticamente. Ideal vertical (4:5).</p>
+          </div>
+
+          <div class="fields">
+            <label class="field"><span>Nombre</span>
+              <input name="name" required maxlength="60" autocomplete="off" placeholder="Ej.: Campera Camo Woodland"></label>
+            <div class="row2">
+              <label class="field"><span>Categoría</span>
+                <input name="cat" required maxlength="30" list="catList" autocomplete="off" placeholder="Ej.: Camperas"></label>
+              <label class="field"><span>Precio (ARS)</span>
+                <div class="money"><i>$</i><input name="price" inputmode="numeric" required autocomplete="off" placeholder="25000"></div></label>
+            </div>
+            <datalist id="catList"></datalist>
+            <label class="field"><span>Descripción <em>(opcional)</em></span>
+              <textarea name="desc" rows="2" maxlength="160" placeholder="Material, detalles, fit…"></textarea></label>
+
+            <div class="field">
+              <div class="label-row">
+                <span class="label">Talles y stock</span>
+                <span class="presets">
+                  <button class="btn btn-xs btn-quiet" type="button" data-preset="std">S–XL</button>
+                  <button class="btn btn-xs btn-quiet" type="button" data-preset="uni">Talle único</button>
+                </span>
+              </div>
+              <div class="sizes-ed" id="sizesEd"></div>
+              <button class="btn btn-sm btn-quiet" type="button" id="addSize">+ Agregar talle</button>
+            </div>
+
+            <label class="check"><input type="checkbox" name="active"> <span>Visible en la tienda</span></label>
+            <p class="form-error" id="prodError" role="alert" hidden></p>
+          </div>
+        </div>
+      </div>
+      <footer class="dlg-foot">
+        <button class="btn btn-quiet" type="button" data-close>Cancelar</button>
+        <button class="btn btn-primary" type="submit" id="prodSave">Guardar producto</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Confirmación -->
+  <dialog class="dlg dlg-sm" id="confirmDialog" aria-labelledby="confirmTitle">
+    <form method="dialog">
+      <div class="dlg-body">
+        <h2 id="confirmTitle"></h2>
+        <p id="confirmText"></p>
+      </div>
+      <footer class="dlg-foot">
+        <button class="btn btn-quiet" value="cancel">Cancelar</button>
+        <button class="btn btn-danger" value="ok" id="confirmOk">Confirmar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../js/store.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

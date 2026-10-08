@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROAD 18 · Catálogo</title>
+  <meta name="description" content="ROAD 18 (18번 도로) — Venta de indumentaria. Camperas, baggys y camisas. Villa María, Córdoba. Envíos a toda la Argentina.">
+  <meta name="theme-color" content="#0b0a0a">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Black+Han+Sans&family=Permanent+Marker&family=Rubik+Spray+Paint&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="wall" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="ROAD 18, inicio">
+      <img src="assets/img/logo.png" alt="" width="46" height="46">
+      <span>ROAD<b>18</b></span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#envios">Envíos</a>
+      <a href="#pagos">Pagos</a>
+      <a href="https://www.instagram.com/road18_/" target="_blank" rel="noopener">Instagram</a>
+    </nav>
+    <button class="cart-btn" id="openCart" type="button" aria-label="Abrir carrito">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM1 2v2h2l3.6 7.6-1.4 2.4A2 2 0 0 0 7 17h12v-2H7.4l1.1-2h7.5a2 2 0 0 0 1.8-1l3.6-6.5A1 1 0 0 0 20.5 4H5.2l-.9-2H1Z"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+  <div class="tape" aria-hidden="true"></div>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-ko" aria-hidden="true">18번 도로</div>
+      <div class="hero-logo">
+        <img src="assets/img/logo.png" alt="Logo ROAD 18 en graffiti sobre pared de ladrillo" width="420" height="420">
+      </div>
+      <div class="hero-copy">
+        <p class="marker">Venta de indumentaria · Villa María, Córdoba</p>
+        <h1>Ropa de calle.<br><span>Stock limitado.</span></h1>
+        <p class="lead">Camperas, baggys y camisas elegidas una por una. Armá tu pedido, pagá en efectivo o por transferencia y te lo mandamos a toda la Argentina.</p>
+        <div class="hero-cta">
+          <a class="btn btn-yellow" href="#catalogo">Ver catálogo</a>
+          <a class="btn btn-ghost" href="https://www.instagram.com/road18_/" target="_blank" rel="noopener">@road18_</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Hasta agotar stock ✦ Envíos a toda la Argentina ✦ Correo Argentino ✦ Efectivo o transferencia ✦ Varios talles disponibles ✦ Road 18 ✦ </span>
+        <span>Hasta agotar stock ✦ Envíos a toda la Argentina ✦ Correo Argentino ✦ Efectivo o transferencia ✦ Varios talles disponibles ✦ Road 18 ✦ </span>
+      </div>
+    </div>
+
+    <!-- CATÁLOGO -->
+    <section class="section" id="catalogo">
+      <header class="section-head">
+        <p class="marker">Lo que hay en el rack</p>
+        <h2>Catálogo</h2>
+      </header>
+
+      <div class="toolbar">
+        <div class="chips" role="group" aria-label="Filtrar por categoría" id="chips"></div>
+        <div class="tools">
+          <label class="check"><input type="checkbox" id="onlyStock"> <span>Solo con stock</span></label>
+          <label class="select">
+            <span class="sr">Ordenar por</span>
+            <select id="sort">
+              <option value="feat">Destacados</option>
+              <option value="asc">Precio: menor a mayor</option>
+              <option value="desc">Precio: mayor a menor</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <ul class="grid" id="grid" aria-live="polite"></ul>
+      <p class="empty" id="gridEmpty" hidden>No hay prendas con ese filtro. Probá con otra categoría.</p>
+    </section>
+
+    <!-- BANNER CAMPERAS -->
+    <section class="promo">
+      <figure class="poster">
+        <img src="assets/img/camperas-todas.jpg" alt="Tres camperas camufladas sobre el piso" loading="lazy">
+      </figure>
+      <div class="promo-copy">
+        <p class="marker">Promo de la semana</p>
+        <h2>Camperas camo<br><span>$25.000</span></h2>
+        <p class="lead">Hasta agotar stock. Varios talles disponibles. Cuando se terminan, se terminan.</p>
+        <a class="btn btn-yellow" href="#catalogo" data-filter-link="Camperas">Ver camperas</a>
+      </div>
+    </section>
+
+    <!-- ENVÍOS -->
+    <section class="section" id="envios">
+      <div class="envios">
+        <div class="envios-copy">
+          <header class="section-head left">
+            <p class="marker">Llegamos a donde estés</p>
+            <h2>Envíos a toda<br>la Argentina</h2>
+          </header>
+          <p class="lead">Despachamos por <strong>Correo Argentino</strong> desde Villa María, Córdoba. Si estás cerca, también podés retirar.</p>
+          <ol class="steps">
+            <li><b>1</b><span>Elegís tus prendas y talle.</span></li>
+            <li><b>2</b><span>Confirmás el pedido y elegís cómo pagar.</span></li>
+            <li><b>3</b><span>Te confirmamos el costo de envío por mensaje.</span></li>
+            <li><b>4</b><span>Despachamos y te pasamos el código de seguimiento.</span></li>
+          </ol>
+        </div>
+        <figure class="poster poster-wide">
+          <img src="assets/img/envios.jpg" alt="Camión de ROAD 18 frente a una pared con graffitis y el texto Envíos a toda la Argentina" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <!-- PAGOS -->
+    <section class="section" id="pagos">
+      <header class="section-head">
+        <p class="marker">Cómo se paga</p>
+        <h2>Medios de pago</h2>
+      </header>
+      <div class="pay-grid">
+        <article class="pay">
+          <div class="pay-ico" aria-hidden="true">$</div>
+          <h3>Efectivo</h3>
+          <p>Pagás al retirar tu pedido en Villa María. Coordinamos día y horario por Instagram.</p>
+        </article>
+        <article class="pay">
+          <div class="pay-ico" aria-hidden="true">⇄</div>
+          <h3>Transferencia</h3>
+          <p>Te pasamos alias y CBU al confirmar. Mandás el comprobante y reservamos tu prenda.</p>
+        </article>
+        <article class="pay pay-soon">
+          <div class="pay-ico" aria-hidden="true">▣</div>
+          <h3>Tarjeta / Pasarela</h3>
+          <p>Próximamente: pagá online con tarjeta o billetera virtual.</p>
+          <span class="soon">Próximamente</span>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="tape" aria-hidden="true"></div>
+    <div class="foot-in">
+      <div class="foot-brand">
+        <img src="assets/img/logo.png" alt="" width="64" height="64">
+        <div>
+          <strong>ROAD 18</strong>
+          <span>18번 도로 · Venta de indumentaria</span>
+        </div>
+      </div>
+      <p>Villa María, Córdoba, Argentina</p>
+      <a href="https://www.instagram.com/road18_/" target="_blank" rel="noopener">Instagram @road18_</a>
+      <p class="fine">Maqueta demostrativa: stock, datos de pago y precios finales a confirmar. No se procesan pagos reales.</p>
+    </div>
+  </footer>
+
+  <!-- CARRITO -->
+  <div class="overlay" id="overlay" hidden></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+    <header class="drawer-head">
+      <h2 id="drawerTitle">Tu carrito</h2>
+      <button class="icon-btn" id="closeCart" type="button" aria-label="Cerrar carrito">✕</button>
+    </header>
+
+    <div class="drawer-body" id="drawerBody">
+      <div class="cart-empty" id="cartEmpty">
+        <p class="marker">Está vacío</p>
+        <p>Todavía no sumaste nada. Mirá el catálogo y elegí tu talle.</p>
+        <a class="btn btn-yellow" href="#catalogo" id="goCatalog">Ir al catálogo</a>
+      </div>
+
+      <ul class="cart-list" id="cartList"></ul>
+
+      <form class="checkout" id="checkout" novalidate hidden>
+        <fieldset>
+          <legend>1 · Tus datos</legend>
+          <label class="field"><span>Nombre y apellido</span>
+            <input name="nombre" autocomplete="name" required minlength="3">
+          </label>
+          <label class="field"><span>WhatsApp / teléfono</span>
+            <input name="tel" type="tel" inputmode="tel" autocomplete="tel" required pattern="[0-9+()\s\-]{8,}">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>2 · Entrega</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="entrega" value="retiro" checked>
+              <span><b>Retiro en Villa María</b><small>Gratis · coordinamos punto y horario</small></span></label>
+            <label class="opt"><input type="radio" name="entrega" value="envio">
+              <span><b>Envío por Correo Argentino</b><small>A todo el país · costo a confirmar</small></span></label>
+          </div>
+          <div class="ship-fields" id="shipFields" hidden>
+            <label class="field"><span>Dirección</span><input name="dir" autocomplete="street-address"></label>
+            <div class="two">
+              <label class="field"><span>Localidad</span><input name="loc" autocomplete="address-level2"></label>
+              <label class="field"><span>Cód. postal</span><input name="cp" inputmode="numeric" autocomplete="postal-code"></label>
+            </div>
+            <label class="field"><span>Provincia</span><input name="prov" autocomplete="address-level1"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3 · Forma de pago</legend>
+          <div class="opts">
+            <label class="opt" id="optEfectivo"><input type="radio" name="pago" value="efectivo" checked>
+              <span><b>Efectivo</b><small>Al retirar el pedido</small></span></label>
+            <label class="opt"><input type="radio" name="pago" value="transferencia">
+              <span><b>Transferencia</b><small>Bancaria o billetera virtual</small></span></label>
+            <label class="opt opt-disabled"><input type="radio" name="pago" value="pasarela" disabled>
+              <span><b>Tarjeta / Mercado Pago</b><small>Pasarela de pago · próximamente</small></span></label>
+          </div>
+          <p class="note" id="payNote"></p>
+          <div class="bank" id="bank" hidden>
+            <p class="bank-tag">Datos de ejemplo</p>
+            <dl>
+              <dt>Titular</dt><dd>ROAD 18</dd>
+              <dt>Alias</dt><dd><span id="alias">road18.ventas</span> <button type="button" class="copy" id="copyAlias">Copiar</button></dd>
+              <dt>CBU</dt><dd>0000000000000000000000</dd>
+            </dl>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+    <footer class="drawer-foot" id="drawerFoot" hidden>
+      <dl class="totals">
+        <div><dt>Subtotal</dt><dd id="subtotal">$0</dd></div>
+        <div><dt>Envío</dt><dd id="shipping">A coordinar</dd></div>
+        <div class="grand"><dt>Total</dt><dd id="total">$0</dd></div>
+      </dl>
+      <button class="btn btn-yellow btn-block" type="submit" form="checkout" id="confirmBtn">Confirmar pedido</button>
+      <button class="link-btn" type="button" id="clearCart">Vaciar carrito</button>
+    </footer>
+  </aside>
+
+  <!-- CONFIRMACIÓN -->
+  <dialog class="modal" id="orderModal" aria-labelledby="orderTitle">
+    <div class="modal-in">
+      <p class="marker">¡Pedido recibido!</p>
+      <h2 id="orderTitle">Gracias por tu compra</h2>
+      <p class="order-id">Pedido <b id="orderId"></b></p>
+      <ul class="order-list" id="orderList"></ul>
+      <p class="order-total">Total <b id="orderTotal"></b></p>
+      <div class="order-next" id="orderNext"></div>
+      <p class="fine">Esto es una maqueta: no se envió ningún pedido real ni se cobró nada.</p>
+      <button class="btn btn-yellow btn-block" type="button" id="closeOrder">Seguir mirando</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
